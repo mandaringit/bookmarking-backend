@@ -13,7 +13,7 @@ export class Todo {
   @Column("text")
   text: string;
 
-  @Column()
+  @Column({ default: false })
   done: boolean;
 
   @CreateDateColumn()
