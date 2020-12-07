@@ -2,7 +2,7 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import express from "express";
 import logger from "morgan";
-import todoRoutes from "./routes/todo";
+import todosRoutes from "./routes/todos";
 
 createConnection()
   .then(async (connection) => {
@@ -10,7 +10,7 @@ createConnection()
     app.use(express.json());
     app.use(logger("dev"));
 
-    app.use("/todo", todoRoutes);
+    app.use("/todos", todosRoutes);
 
     app.listen(8080, () => {
       console.log("Listen on port 8080");

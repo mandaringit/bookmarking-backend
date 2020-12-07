@@ -2,14 +2,14 @@ import { RequestHandler } from "express";
 import { getRepository } from "typeorm";
 import { Todo } from "../entity/Todo";
 
-export const getTodoById: RequestHandler<{ id: number }> = async (
+export const getTodoById: RequestHandler<{ todoId: number }> = async (
   req,
   res,
   next
 ) => {
-  const { id } = req.params;
+  const { todoId } = req.params;
   const todoRepository = getRepository(Todo);
-  const todo = await todoRepository.findOne(id);
+  const todo = await todoRepository.findOne(todoId);
   if (!todo) {
     res.status(404).json({ message: "찾을 수 없는 할일입니다." });
     return;
@@ -41,15 +41,15 @@ export const createTodo: RequestHandler<{}, {}, { text: string }> = async (
   res.status(201).json({ todo: savedTodo });
 };
 
-export const removeTodo: RequestHandler<{ id: number }> = async (
+export const removeTodo: RequestHandler<{ todoId: number }> = async (
   req,
   res,
   next
 ) => {
-  const { id } = req.params;
+  const { todoId } = req.params;
 
   const todoRepository = getRepository(Todo);
-  const selectedTodo = await todoRepository.findOne(id);
+  const selectedTodo = await todoRepository.findOne(todoId);
   if (!selectedTodo) {
     res.status(404).json({ message: "할일을 찾을 수 없습니다." });
     return;
@@ -60,14 +60,14 @@ export const removeTodo: RequestHandler<{ id: number }> = async (
 };
 
 export const updateTodoText: RequestHandler<
-  { id: number },
+  { todoId: number },
   {},
   { text: string }
 > = async (req, res, next) => {
-  const { id } = req.params;
+  const { todoId } = req.params;
   const { text } = req.body;
   const todoRepository = getRepository(Todo);
-  const selectedTodo = await todoRepository.findOne(id);
+  const selectedTodo = await todoRepository.findOne(todoId);
   if (!selectedTodo) {
     res.status(404).json({ message: "할일을 찾을 수 없습니다." });
     return;
@@ -78,14 +78,14 @@ export const updateTodoText: RequestHandler<
   res.status(200).json({ todo: selectedTodo });
 };
 
-export const toggleTodo: RequestHandler<{ id: number }> = async (
+export const toggleTodo: RequestHandler<{ todoId: number }> = async (
   req,
   res,
   next
 ) => {
-  const { id } = req.params;
+  const { todoId } = req.params;
   const todoRepository = getRepository(Todo);
-  const selectedTodo = await todoRepository.findOne(id);
+  const selectedTodo = await todoRepository.findOne(todoId);
   if (!selectedTodo) {
     res.status(404).json({ message: "할일을 찾을 수 없습니다." });
     return;
