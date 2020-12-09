@@ -14,13 +14,13 @@ export const getTodoById: RequestHandler<{ todoId: number }> = async (
     res.status(404).json({ message: "찾을 수 없는 할일입니다." });
     return;
   }
-  res.status(200).json({ todo });
+  res.status(200).json(todo);
 };
 
 export const getTodos: RequestHandler = async (req, res, next) => {
   const todoRepository = getRepository(Todo);
-  const todos = await todoRepository.find();
-  res.status(200).json({ todos });
+  const todos = await todoRepository.find({ order: { createdAt: "DESC" } });
+  res.status(200).json(todos);
 };
 
 export const createTodo: RequestHandler<{}, {}, { text: string }> = async (
@@ -38,7 +38,7 @@ export const createTodo: RequestHandler<{}, {}, { text: string }> = async (
 
   console.log(`SAVED! ${savedTodo.text} ${savedTodo.createdAt}`);
 
-  res.status(201).json({ todo: savedTodo });
+  res.status(201).json(savedTodo);
 };
 
 export const removeTodo: RequestHandler<{ todoId: number }> = async (
@@ -75,7 +75,7 @@ export const updateTodoText: RequestHandler<
 
   selectedTodo.text = text;
   await todoRepository.save(selectedTodo);
-  res.status(200).json({ todo: selectedTodo });
+  res.status(200).json(selectedTodo);
 };
 
 export const toggleTodo: RequestHandler<{ todoId: number }> = async (
@@ -93,5 +93,5 @@ export const toggleTodo: RequestHandler<{ todoId: number }> = async (
 
   selectedTodo.done = !selectedTodo.done;
   await todoRepository.save(selectedTodo);
-  res.status(200).json({ todo: selectedTodo });
+  res.status(200).json(selectedTodo);
 };
