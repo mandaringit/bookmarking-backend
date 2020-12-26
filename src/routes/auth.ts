@@ -1,10 +1,19 @@
-import { Router } from "express";
+import { RequestHandler, Router } from "express";
 import passport from "passport";
-import { localAuth } from "../controller/auth";
+import { login } from "../controller/auth";
 
 const router = Router();
 
-router.post("/local", passport.authenticate("local"), localAuth);
+const isAuthenticated: RequestHandler = (req, res, next) => {
+  if (req.user) {
+    return next();
+  } else {
+    return res.status(401).send({ error: "인증되지 않은 유저" });
+  }
+};
+
+router.get("/checkAuth", isAuthenticated, login);
+router.post("/local", passport.authenticate("local"), login);
 // router.get(
 //   "/google",
 //   passport.authenticate("google", { scope: ["email"] }),

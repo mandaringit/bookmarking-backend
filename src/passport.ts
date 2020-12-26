@@ -17,11 +17,13 @@ passport.deserializeUser<Partial<User>, string>(async (email, done) => {
     done(false);
   }
 
+  // 여기의 user가 req.user가 됨
   done(null, {
     id: findUser.id,
     email: findUser.email,
     googleId: findUser.googleId,
-  }); // 여기의 user가 req.user가 됨
+    username: findUser.username,
+  });
 });
 
 passport.use(
@@ -34,7 +36,7 @@ passport.use(
     async (email, password, done) => {
       const userRepository = getRepository(User);
       try {
-        const user = await userRepository.findOne({ email });
+        const user = await userRepository.findOne({ email, password });
         done(null, user ? user : false);
       } catch (e) {
         done(e);
