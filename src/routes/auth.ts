@@ -1,16 +1,9 @@
-import { RequestHandler, Router } from "express";
+import { Router } from "express";
 import passport from "passport";
 import { login } from "../controller/auth";
+import { isAuthenticated } from "../middlewares/auth";
 
 const router = Router();
-
-const isAuthenticated: RequestHandler = (req, res, next) => {
-  if (req.user) {
-    return next();
-  } else {
-    return res.status(401).send({ error: "인증되지 않은 유저" });
-  }
-};
 
 router.get("/checkAuth", isAuthenticated, login);
 router.post("/local", passport.authenticate("local"), login);
