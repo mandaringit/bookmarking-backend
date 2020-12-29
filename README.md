@@ -1,22 +1,26 @@
-# Todo 백엔드
+# Bookmarking API
 
-TypeORM을 활용해 간단한 TODO API를 만들어보았다. 사용자 인증같은 기능 없이 오직 Todo를 만들고, 지우고, 업데이트할 뿐이다.
+## Relation
 
-## 할일
+- User : 사용자
+  - reports (1 : N) : 사용자는 여러개의 리포트를 갖는다.
+  - fragments (1 : N) : 사용자는 여러개의 생각조각을 갖는다.
+- Author : 작가
+  - books(1 : N) : 작가는 여러개의 책을 갖는다.
+- Book : 책
+  - author(N : 1) : 책은 하나의 작가를 갖는다.
+- Report
+  - fragments(1 : N) : 리포트는 여러개의 생각 조각을 갖는다.
+  - user(N : 1) : 리포트는 하나의 유저를 갖는다.
+  - book(N : 1) : 리포트는 하나의 책을 갖는다.
+- Fragment : 하나의 리포트를 갖는 생각 조각.
+  - book (N : 1): 생각 조각은 하나의 책을 갖는다.
+  - user (N : 1): 생각 조각은 하나의 유저를 갖는다.
 
-- [x] CREATE
-- [x] READ
-- [x] UPDATE
-- [x] DELETE
-- [ ] READ & Filter
-- [ ] Dummy Data
-- [ ] Deploy
+## Routes
 
-## /todos
+### `/auth`
 
-- GET `/todos` : 모든 Todo 가져옴
-- GET `/todos/:todoId` : 해당하는 Todo 가져오기
-- POST `/todos` : text를 body로 주면 Todo 생성
-- DELETE `/todos/:todoId` : 해당하는 Todo 삭제
-- PATCH `/todos/:todoId` : 해당하는 Todo body에 text 보내면 내용 수정
-- PATCH `/todos/:todoId/toggle` : 해당하는 Todo 완료 여부 토글
+### `/authors`
+
+### `/`
