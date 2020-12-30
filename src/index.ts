@@ -4,9 +4,17 @@ import express from "express";
 import logger from "morgan";
 import todosRoutes from "./routes/todos";
 import authRoutes from "./routes/auth";
+import authorsRoutes from "./routes/authors";
+import booksRoutes from "./routes/books";
+import reportsRoutes from "./routes/reports";
+import fragmentRoutes from "./routes/fragments";
+import naverApiRoutes from "./routes/naverApi";
+import kakaoApiRoutes from "./routes/kakaoApi";
 import cors from "cors";
 import passport from "passport";
 import session from "express-session";
+import dotenv from "dotenv";
+dotenv.config();
 
 createConnection()
   .then(async (connection) => {
@@ -14,6 +22,10 @@ createConnection()
     app.use(cors({ origin: "http://localhost:3000", credentials: true }));
     app.use(express.json());
     app.use(logger("dev"));
+
+    /**
+     * 세션 설정
+     */
     app.use(
       session({
         secret: "SECRET_CODE",
@@ -23,11 +35,27 @@ createConnection()
       })
     );
 
+    /**
+     * 패스포트
+     */
     app.use(passport.initialize());
     app.use(passport.session());
 
-    app.use("/todos", todosRoutes);
+    /**
+     * 라우터
+     */
     app.use("/auth", authRoutes);
+    app.use("/todos", todosRoutes);
+    app.use("/authors", authorsRoutes);
+    app.use("/books", booksRoutes);
+    app.use("/reports", reportsRoutes);
+    app.use("/fragments", fragmentRoutes);
+
+    /**
+     * 외부 API
+     */
+    app.use("/naver/search/book", naverApiRoutes);
+    app.use("/kakao/search/book", kakaoApiRoutes);
 
     // 디버그용 엔드포인트
     app.get("/debug", (req, res) => {
