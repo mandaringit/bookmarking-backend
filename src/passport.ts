@@ -44,27 +44,3 @@ passport.use(
     }
   )
 );
-
-// Google 인증
-// passport.use(
-//   new GoogleStrategy.OAuth2Strategy(
-//     {
-//       clientID:
-//         "640212556432-2d8tobdibkfrtqlgvig0bc1tngve7576.apps.googleusercontent.com",
-//       clientSecret: "fDuLAJ3SSkIPmUnD7PG5vf9v",
-//       callbackURL: "http://localhost:8080/auth/google/callback",
-//     },
-//     async function (accessToken, refreshToken, user, done) {
-//       const userRepository = getRepository(User);
-//       const findUser = await userRepository.findOne({ googleId: user.id });
-//       console.log(user);
-//       if (!findUser) {
-//         const newUser = new User();
-//         newUser.googleId = user.id;
-//         newUser.email = user.emails.length > 0 ? user.emails[0].value : "";
-//         userRepository.save(newUser);
-//       }
-//       return done(null, user);
-//     }
-//   )
-// );
