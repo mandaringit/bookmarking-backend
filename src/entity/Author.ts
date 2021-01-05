@@ -1,4 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Book } from "./Book";
 
 @Entity()
@@ -6,6 +12,7 @@ export class Author {
   @PrimaryGeneratedColumn({})
   id: string;
 
+  @Index({ unique: true })
   @Column()
   name: string;
 

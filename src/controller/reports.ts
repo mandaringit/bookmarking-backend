@@ -24,13 +24,12 @@ export const createReport: RequestHandler = async (req, res, next) => {
   // 1. Author 찾기 & 만들기
   const authorRepository = getRepository(Author);
   let author = await authorRepository.findOne({
-    where: { name: bookInfo.author },
+    name: bookInfo.authors[0], // name은 유니크함
   });
 
   if (!author) {
     author = new Author();
-    author.name = bookInfo.author;
-    await authorRepository.save(author);
+    author.name = bookInfo.authors[0];
   }
 
   // 2. Book 찾기 & 만들기
@@ -39,10 +38,9 @@ export const createReport: RequestHandler = async (req, res, next) => {
   if (!book) {
     book = new Book();
     book.title = bookInfo.title;
-    book.page = bookInfo.page;
+    book.thumbnail = bookInfo.thumbnail;
     book.isbn = bookInfo.isbn;
     book.author = author; // author 객체.
-    await bookRepository.save(book);
   }
 
   // 3. Report 찾기 & 만들기
@@ -56,6 +54,10 @@ export const createReport: RequestHandler = async (req, res, next) => {
     report.title = title;
     report.user = currentUser;
     report.book = book;
+
+    // 존재하지 않는 리포트인 경우에만 마지막에 각 객체들 DB에 반영?
+    await authorRepository.save(author);
+    await bookRepository.save(book);
     await reportRepository.save(report);
 
     return res.status(201).send(report);

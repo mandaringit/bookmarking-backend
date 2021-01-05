@@ -21,11 +21,11 @@ export class Book {
   @Column()
   title: string;
 
+  @Column()
+  thumbnail: string;
+
   @ManyToOne((type) => Author, (author) => author.books)
   author: Author;
-
-  @Column()
-  page: number;
 
   @OneToMany((type) => Report, (report) => report.book)
   reports: Report[];
