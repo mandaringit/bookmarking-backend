@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -12,6 +13,10 @@ import { Report } from "./Report";
 export class Book {
   @PrimaryGeneratedColumn()
   id: string;
+
+  @Index({ unique: true })
+  @Column()
+  isbn: string;
 
   @Column()
   title: string;

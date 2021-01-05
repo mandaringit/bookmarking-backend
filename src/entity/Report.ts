@@ -1,4 +1,10 @@
-import { Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Book } from "./Book";
 import { Fragment } from "./Fragment";
 import { User } from "./User";
@@ -7,6 +13,9 @@ import { User } from "./User";
 export class Report {
   @PrimaryGeneratedColumn()
   id: string;
+
+  @Column("text")
+  title: string;
 
   @OneToMany((type) => Fragment, (fragment) => fragment.report)
   fragments: Fragment[];
