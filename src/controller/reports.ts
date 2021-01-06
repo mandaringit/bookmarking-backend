@@ -5,6 +5,27 @@ import { Book } from "../entity/Book";
 import { Report } from "../entity/Report";
 import { User } from "../entity/User";
 
+export const findReportById: RequestHandler = async (req, res, next) => {
+  const { reportId } = req.params;
+  const reportRepository = getRepository(Report);
+  const currentUser = req.user as User;
+  const findReport = await reportRepository.findOne(reportId, {
+    relations: ["user", "fragments", "book", "book.author"],
+  });
+
+  if (!findReport) {
+    return res.status(404).send({ error: "찾을 수 없는 독후감입니다." });
+  }
+
+  if (findReport.user.id !== currentUser.id) {
+    return res.status(401).send({ error: "권한이 없습니다." });
+  }
+
+  delete findReport.user;
+
+  return res.status(200).send(findReport);
+};
+
 export const findMyReports: RequestHandler = async (req, res, next) => {
   const currentUser = req.user as User;
   const reportRepository = getRepository(Report);
