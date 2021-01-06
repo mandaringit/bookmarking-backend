@@ -10,7 +10,7 @@ export const findMyReports: RequestHandler = async (req, res, next) => {
   const reportRepository = getRepository(Report);
   const reports = await reportRepository.find({
     where: { user: currentUser },
-    relations: ["book"],
+    relations: ["book", "book.author"],
   });
   return res.status(200).send(reports);
 };
@@ -59,6 +59,9 @@ export const createReport: RequestHandler = async (req, res, next) => {
     await authorRepository.save(author);
     await bookRepository.save(book);
     await reportRepository.save(report);
+
+    // 보낼 객체 정보에서 user 정보는 필요없으니 제외.
+    delete report.user;
 
     return res.status(201).send(report);
   }
