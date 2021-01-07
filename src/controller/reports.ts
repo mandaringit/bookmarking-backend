@@ -5,8 +5,13 @@ import { Book } from "../entity/Book";
 import { Report } from "../entity/Report";
 import { User } from "../entity/User";
 
-export const findReportById: RequestHandler = async (req, res, next) => {
-  const { reportId } = req.params;
+export const findReportById: RequestHandler<
+  any,
+  any,
+  any,
+  { reportId: string }
+> = async (req, res, next) => {
+  const { reportId } = req.query;
   const reportRepository = getRepository(Report);
   const currentUser = req.user as User;
   const findReport = await reportRepository.findOne(reportId, {
