@@ -29,9 +29,9 @@ export const removeReport: ReportIdRequestHandler = async (req, res, next) => {
     return res.status(401).send(MESSAGE_401);
   }
 
-  reportRepository.remove(findReport);
+  await reportRepository.remove(findReport);
 
-  return res.status(200).send({ id: findReport.id });
+  return res.status(200).send({ id: reportId });
 };
 
 export const findReportById: ReportIdRequestHandler = async (
