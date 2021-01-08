@@ -60,5 +60,5 @@ export const removeFragment: FragmentIdRequestHandler = async (
 
   await fragmentRepository.remove(findFragment);
 
-  return res.status(200).send({ id: fragmentId });
+  return res.status(200).send({ id: Number(fragmentId) });
 };
