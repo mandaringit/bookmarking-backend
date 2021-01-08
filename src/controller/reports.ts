@@ -5,12 +5,40 @@ import { Book } from "../entity/Book";
 import { Report } from "../entity/Report";
 import { User } from "../entity/User";
 
-export const findReportById: RequestHandler<
+const MESSAGE_404 = { message: "찾을 수 없는 요소입니다." };
+const MESSAGE_401 = { message: "권한이 없습니다." };
+
+export type ReportIdRequestHandler = RequestHandler<
   any,
   any,
   any,
   { reportId: string }
-> = async (req, res, next) => {
+>;
+
+export const removeReport: ReportIdRequestHandler = async (req, res, next) => {
+  const { reportId } = req.query;
+  const currentUser = req.user as User;
+  const reportRepository = getRepository(Report);
+  const findReport = await reportRepository.findOne(reportId, {
+    relations: ["user"],
+  });
+
+  if (!findReport) return res.status(404).send(MESSAGE_404);
+
+  if (findReport.user.id !== currentUser.id) {
+    return res.status(401).send(MESSAGE_401);
+  }
+
+  reportRepository.remove(findReport);
+
+  return res.status(200).send({ id: findReport.id });
+};
+
+export const findReportById: ReportIdRequestHandler = async (
+  req,
+  res,
+  next
+) => {
   const { reportId } = req.query;
   const reportRepository = getRepository(Report);
   const currentUser = req.user as User;
@@ -19,11 +47,11 @@ export const findReportById: RequestHandler<
   });
 
   if (!findReport) {
-    return res.status(404).send({ error: "찾을 수 없는 독후감입니다." });
+    return res.status(404).send(MESSAGE_404);
   }
 
   if (findReport.user.id !== currentUser.id) {
-    return res.status(401).send({ error: "권한이 없습니다." });
+    return res.status(401).send(MESSAGE_401);
   }
 
   delete findReport.user;
