@@ -24,9 +24,11 @@ export class Book {
   @Column()
   thumbnail: string;
 
-  @ManyToOne((type) => Author, (author) => author.books)
+  @ManyToOne((type) => Author, (author) => author.books, {
+    onDelete: "CASCADE",
+  })
   author: Author;
 
-  @OneToMany((type) => Report, (report) => report.book)
+  @OneToMany((type) => Report, (report) => report.book, { cascade: true })
   reports: Report[];
 }

@@ -17,12 +17,14 @@ export class Report {
   @Column("text")
   title: string;
 
-  @OneToMany((type) => Fragment, (fragment) => fragment.report)
-  fragments: Fragment[];
-
-  @ManyToOne((type) => User, (user) => user.reports)
+  @ManyToOne((type) => User, (user) => user.reports, { onDelete: "CASCADE" })
   user: User;
 
-  @ManyToOne((type) => Book, (book) => book.reports)
+  @ManyToOne((type) => Book, (book) => book.reports, { onDelete: "CASCADE" })
   book: Book;
+
+  @OneToMany((type) => Fragment, (fragment) => fragment.report, {
+    cascade: true,
+  })
+  fragments: Fragment[];
 }

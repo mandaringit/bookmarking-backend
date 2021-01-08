@@ -20,9 +20,11 @@ export class Fragment {
   @CreateDateColumn()
   createdAt: Date;
 
-  @ManyToOne((type) => Report, (report) => report.fragments)
+  @ManyToOne((type) => Report, (report) => report.fragments, {
+    onDelete: "CASCADE",
+  })
   report: Report;
 
-  @ManyToOne((type) => User, (user) => user.fragments)
+  @ManyToOne((type) => User, (user) => user.fragments, { onDelete: "CASCADE" })
   user: User;
 }
