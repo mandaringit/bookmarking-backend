@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import { getRepository } from "typeorm";
 import { User } from "../entity/User";
 import "../passport";
 
@@ -18,6 +19,28 @@ export const login: RequestHandler = (req, res, next) => {
     googleId,
     username,
   });
+};
+
+export const signup: RequestHandler = async (req, res, next) => {
+  const userRepository = getRepository(User);
+  const { email, password } = req.body;
+  const findUser = await userRepository.findOne({ email });
+
+  if (!email || !password) {
+    return res.status(400).send({ message: "잘못된 형식입니다." });
+  }
+
+  if (findUser) {
+    return res.status(409).send({ message: `이미 존재하는 이메일 입니다.` });
+  }
+
+  const user = new User();
+  user.email = email;
+  user.password = password;
+  await userRepository.save(user);
+
+  // 다음 미들웨어로 넘겨줌
+  next();
 };
 
 // export const googleAuth: RequestHandler = (req, res, next) => {};
