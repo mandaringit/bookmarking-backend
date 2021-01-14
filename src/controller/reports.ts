@@ -15,6 +15,32 @@ export type ReportIdRequestHandler = RequestHandler<
   { reportId: string }
 >;
 
+export const updateReportTitle: ReportIdRequestHandler = async (
+  req,
+  res,
+  next
+) => {
+  const { reportId } = req.query;
+  const { title } = req.body;
+  const currentUser = req.user as User;
+  const reportRepository = getRepository(Report);
+  const findReport = await reportRepository.findOne(reportId, {
+    relations: ["user"],
+  });
+
+  if (!findReport) return res.status(404).send(MESSAGE_404);
+
+  if (findReport.user.id !== currentUser.id) {
+    return res.status(401).send(MESSAGE_401);
+  }
+
+  findReport.title = title;
+  await reportRepository.save(findReport);
+
+  delete findReport.user;
+  return res.status(200).send(findReport);
+};
+
 export const removeReport: ReportIdRequestHandler = async (req, res, next) => {
   const { reportId } = req.query;
   const currentUser = req.user as User;
@@ -31,7 +57,7 @@ export const removeReport: ReportIdRequestHandler = async (req, res, next) => {
 
   await reportRepository.remove(findReport);
 
-  return res.status(200).send({ id: reportId });
+  return res.status(200).send({ id: Number(reportId) });
 };
 
 export const findReportById: ReportIdRequestHandler = async (
