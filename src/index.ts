@@ -10,6 +10,7 @@ import reportsRoutes from "./routes/reports";
 import fragmentRoutes from "./routes/fragments";
 import naverApiRoutes from "./routes/naverApi";
 import kakaoApiRoutes from "./routes/kakaoApi";
+import libraryRoutes from "./routes/library";
 import cors from "cors";
 import passport from "passport";
 import session from "express-session";
@@ -50,6 +51,7 @@ createConnection()
     app.use("/books", booksRoutes);
     app.use("/reports", reportsRoutes);
     app.use("/fragments", fragmentRoutes);
+    app.use("/library", libraryRoutes);
 
     /**
      * 외부 API

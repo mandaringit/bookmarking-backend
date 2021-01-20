@@ -12,6 +12,7 @@
       "@types/passport": "^1.0.4",
       "@types/passport-google-oauth": "^1.0.41",
       "@types/passport-local": "^1.0.33",
+      "@types/xml-js": "^1.0.0",
       "ts-node": "^3.3.0",
       "typescript": "^4.1.3"
    },
@@ -31,7 +32,8 @@
       "passport-local": "^1.0.0",
       "reflect-metadata": "^0.1.10",
       "ts-jest": "^26.4.4",
-      "typeorm": "0.2.29"
+      "typeorm": "0.2.29",
+      "xml-js": "^1.6.11"
    },
    "scripts": {
       "start": "pm2-dev src/index.ts",

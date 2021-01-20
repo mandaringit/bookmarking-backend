@@ -7,6 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Author } from "./Author";
+import { LibraryOwnStatus } from "./LibraryOwnStatus";
 import { Report } from "./Report";
 
 @Entity()
@@ -31,4 +32,10 @@ export class Book {
 
   @OneToMany((type) => Report, (report) => report.book, { cascade: true })
   reports: Report[];
+
+  @OneToMany(
+    (type) => LibraryOwnStatus,
+    (libraryOwnStatus) => libraryOwnStatus.book
+  )
+  libraryOwnStatuses: LibraryOwnStatus[];
 }
