@@ -9,6 +9,7 @@ import {
 import { Author } from "./Author";
 import { LibraryOwnStatus } from "./LibraryOwnStatus";
 import { Report } from "./Report";
+import { Wish } from "./Wish";
 
 @Entity()
 export class Book {
@@ -35,7 +36,11 @@ export class Book {
 
   @OneToMany(
     (type) => LibraryOwnStatus,
-    (libraryOwnStatus) => libraryOwnStatus.book
+    (libraryOwnStatus) => libraryOwnStatus.book,
+    { cascade: true }
   )
   libraryOwnStatuses: LibraryOwnStatus[];
+
+  @OneToMany((type) => Wish, (wish) => wish.book, { cascade: true })
+  wishes: Wish[];
 }

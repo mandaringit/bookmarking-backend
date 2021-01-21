@@ -8,6 +8,7 @@ import {
 import { Fragment } from "./Fragment";
 import { Report } from "./Report";
 import { Todo } from "./Todo";
+import { Wish } from "./Wish";
 
 @Entity()
 export class User {
@@ -37,4 +38,7 @@ export class User {
 
   @OneToMany((type) => Fragment, (fragment) => fragment.user, { cascade: true })
   fragments: Fragment[];
+
+  @OneToMany((type) => Wish, (wish) => wish.user, { cascade: true })
+  wishes: Wish[];
 }
