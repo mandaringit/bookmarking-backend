@@ -2,7 +2,6 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import express from "express";
 import logger from "morgan";
-import todosRoutes from "./routes/todos";
 import authRoutes from "./routes/auth";
 import authorsRoutes from "./routes/authors";
 import booksRoutes from "./routes/books";
@@ -11,6 +10,7 @@ import fragmentRoutes from "./routes/fragments";
 import naverApiRoutes from "./routes/naverApi";
 import kakaoApiRoutes from "./routes/kakaoApi";
 import libraryRoutes from "./routes/library";
+import wishRoutes from "./routes/wish";
 import cors from "cors";
 import passport from "passport";
 import session from "express-session";
@@ -30,7 +30,7 @@ createConnection()
     app.use(
       session({
         secret: "SECRET_CODE",
-        cookie: { maxAge: 60 * 60 * 1000 },
+        cookie: { maxAge: 60 * 60 * 60 * 1000 },
         resave: false,
         saveUninitialized: false,
       })
@@ -46,16 +46,16 @@ createConnection()
      * 라우터
      */
     app.use("/auth", authRoutes);
-    app.use("/todos", todosRoutes);
     app.use("/authors", authorsRoutes);
     app.use("/books", booksRoutes);
     app.use("/reports", reportsRoutes);
     app.use("/fragments", fragmentRoutes);
-    app.use("/library", libraryRoutes);
+    app.use("/wishes", wishRoutes);
 
     /**
      * 외부 API
      */
+    app.use("/library", libraryRoutes);
     app.use("/naver/search/book", naverApiRoutes);
     app.use("/kakao/search/book", kakaoApiRoutes);
 

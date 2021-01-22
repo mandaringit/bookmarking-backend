@@ -134,6 +134,7 @@ async function updateCollectionStatus(wishes: Wish[], libCodes: string[]) {
           code: libCode,
         },
       });
+
       let status = await libraryOwnStatusRepository.findOne({
         where: {
           book: wish.book,
@@ -151,6 +152,7 @@ async function updateCollectionStatus(wishes: Wish[], libCodes: string[]) {
           );
           status.hasBook = hasBook === "Y";
           status.loanAvailable = loanAvailable === "Y";
+          status.updatedAt = new Date();
           await libraryOwnStatusRepository.save(status);
         }
       } else {
@@ -159,12 +161,12 @@ async function updateCollectionStatus(wishes: Wish[], libCodes: string[]) {
           libCode,
           isbn13
         );
+
         const status = new LibraryOwnStatus();
         status.book = wish.book;
         status.library = await libraryRepository.findOne(1);
         status.hasBook = hasBook === "Y";
         status.loanAvailable = loanAvailable === "Y";
-
         await libraryOwnStatusRepository.save(status);
       }
     }
