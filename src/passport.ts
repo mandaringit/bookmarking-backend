@@ -3,6 +3,7 @@ import GoogleStrategy from "passport-google-oauth";
 import LocalStrategy from "passport-local";
 import { getRepository } from "typeorm";
 import { User } from "./entity/User";
+import bcrypt from "bcrypt";
 
 passport.serializeUser<User, string>((user, done) => {
   // 로그인한 뒤, 세션에 어떤 정보를 저장할 것인지 결정할 콜백 함수.
@@ -36,8 +37,13 @@ passport.use(
     async (email, password, done) => {
       const userRepository = getRepository(User);
       try {
-        const user = await userRepository.findOne({ email, password });
-        done(null, user ? user : false);
+        const user = await userRepository.findOne({ email });
+        bcrypt.compare(password, user.password, (err, same) => {
+          if (same) {
+            return done(null, user);
+          }
+          return done(err, false);
+        });
       } catch (e) {
         done(e);
       }

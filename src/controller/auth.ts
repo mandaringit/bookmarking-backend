@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { getRepository } from "typeorm";
 import { User } from "../entity/User";
+import bcrypt from "bcrypt";
 import "../passport";
 
 export const logout: RequestHandler = (req, res, next) => {
@@ -36,7 +37,8 @@ export const signup: RequestHandler = async (req, res, next) => {
 
   const user = new User();
   user.email = email;
-  user.password = password;
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  user.password = hashedPassword;
   await userRepository.save(user);
 
   // 다음 미들웨어로 넘겨줌
