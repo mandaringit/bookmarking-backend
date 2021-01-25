@@ -129,11 +129,17 @@ async function updateCollectionStatus(wishes: Wish[], libCodes: string[]) {
 
     // 2. 가진 리포트들 중, 원하는 도서관의 상태를 확인한다.
     for (let libCode of libCodes) {
-      const library = await libraryRepository.findOne({
+      let library = await libraryRepository.findOne({
         where: {
           code: libCode,
         },
       });
+
+      if (!library) {
+        library = new Library();
+        library.code = libCode;
+        await libraryRepository.save(library);
+      }
 
       let status = await libraryOwnStatusRepository.findOne({
         where: {
