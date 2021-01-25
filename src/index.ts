@@ -3,8 +3,6 @@ import { createConnection } from "typeorm";
 import express from "express";
 import logger from "morgan";
 import authRoutes from "./routes/auth";
-import authorsRoutes from "./routes/authors";
-import booksRoutes from "./routes/books";
 import reportsRoutes from "./routes/reports";
 import fragmentRoutes from "./routes/fragments";
 import naverApiRoutes from "./routes/naverApi";
@@ -46,8 +44,6 @@ createConnection()
      * 라우터
      */
     app.use("/auth", authRoutes);
-    app.use("/authors", authorsRoutes);
-    app.use("/books", booksRoutes);
     app.use("/reports", reportsRoutes);
     app.use("/fragments", fragmentRoutes);
     app.use("/wishes", wishRoutes);
