@@ -1,5 +1,5 @@
 {
-   "name": "todo-backend",
+   "name": "bookmarking-backend",
    "version": "0.0.1",
    "description": "Awesome project developed with TypeORM.",
    "devDependencies": {
@@ -38,7 +38,8 @@
       "xml-js": "^1.6.11"
    },
    "scripts": {
-      "start": "pm2-dev src/index.ts",
-      "build": "tsc"
+      "start": "npm build && cd build && pm2 start index.js",
+      "build": "tsc",
+      "dev": "pm2-dev src/index.ts"
    }
 }
