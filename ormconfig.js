@@ -8,7 +8,7 @@ module.exports = {
   synchronize: true,
   timezone: "+09:00",
   logging: false,
-  entities: ["src/entity/**/*.ts"],
+  entities: ["entity/**/*.js", "src/entity/**/*.ts"],
   migrations: ["src/migration/**/*.ts"],
   subscribers: ["src/subscriber/**/*.ts"],
   cli: {
