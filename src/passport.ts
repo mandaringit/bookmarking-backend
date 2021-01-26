@@ -7,7 +7,6 @@ import bcrypt from "bcryptjs";
 
 passport.serializeUser((user: User, done) => {
   // 로그인한 뒤, 세션에 어떤 정보를 저장할 것인지 결정할 콜백 함수.
-
   done(null, user.email); // user객체가 deserializeUser로 전달됨.
 });
 
