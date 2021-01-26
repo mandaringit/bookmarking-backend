@@ -13,11 +13,10 @@ passport.serializeUser((user: User, done) => {
 passport.deserializeUser(async (email, done) => {
   // 세션에 저장한 데이터로 로그인한 유저 정보를 복구하는데 이걸 결정하는 함수
   const userRepository = getRepository(User);
-  const findUser = await userRepository.findOne(email);
+  const findUser = await userRepository.findOne({ where: { email } });
   if (!findUser) {
-    done(false);
+    return done(null, false);
   }
-
   // 여기의 user가 req.user가 됨
   done(null, {
     id: findUser.id,

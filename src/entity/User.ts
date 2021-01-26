@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -15,7 +16,8 @@ export class User {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ unique: true })
+  @Index({ unique: true })
+  @Column()
   email: string;
 
   @Column({ default: "default" })
