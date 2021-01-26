@@ -40,6 +40,11 @@ createConnection()
     app.use(passport.initialize());
     app.use(passport.session());
 
+    app.get("/", (req, res) => {
+      res.json({
+        message: "welcome to bookmarking api",
+      });
+    });
     /**
      * 라우터
      */
