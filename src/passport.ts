@@ -3,17 +3,18 @@ import GoogleStrategy from "passport-google-oauth";
 import LocalStrategy from "passport-local";
 import { getRepository } from "typeorm";
 import { User } from "./entity/User";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
-passport.serializeUser<User, string>((user, done) => {
+passport.serializeUser((user: User, done) => {
   // 로그인한 뒤, 세션에 어떤 정보를 저장할 것인지 결정할 콜백 함수.
+
   done(null, user.email); // user객체가 deserializeUser로 전달됨.
 });
 
-passport.deserializeUser<Partial<User>, string>(async (email, done) => {
+passport.deserializeUser(async (email, done) => {
   // 세션에 저장한 데이터로 로그인한 유저 정보를 복구하는데 이걸 결정하는 함수
   const userRepository = getRepository(User);
-  const findUser = await userRepository.findOne({ email });
+  const findUser = await userRepository.findOne(email);
   if (!findUser) {
     done(false);
   }
