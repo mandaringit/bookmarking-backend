@@ -7,7 +7,6 @@ import bcrypt from "bcryptjs";
 
 passport.serializeUser((user: User, done) => {
   // 로그인한 뒤, 세션에 어떤 정보를 저장할 것인지 결정할 콜백 함수.
-  console.log("serializer", user);
   done(null, user.email); // user객체가 deserializeUser로 전달됨.
 });
 
@@ -15,7 +14,6 @@ passport.deserializeUser(async (email, done) => {
   // 세션에 저장한 데이터로 로그인한 유저 정보를 복구하는데 이걸 결정하는 함수
   const userRepository = getRepository(User);
   const findUser = await userRepository.findOne({ where: { email } });
-  console.log("deserializer", findUser);
   if (!findUser) {
     return done(null, false);
   }
