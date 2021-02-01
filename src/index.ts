@@ -18,7 +18,16 @@ dotenv.config();
 createConnection()
   .then(async (connection) => {
     const app = express();
-    app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+    app.use(
+      cors({
+        origin: [
+          "http://localhost:3000",
+          "http://127.0.0.1:3000",
+          "https://master.dn1e3ltunjudd.amplifyapp.com",
+        ],
+        credentials: true,
+      })
+    );
     app.use(express.json());
     app.use(logger("dev"));
 
@@ -40,6 +49,11 @@ createConnection()
     app.use(passport.initialize());
     app.use(passport.session());
 
+    app.get("/", (req, res) => {
+      res.json({
+        message: "welcome to bookmarking api",
+      });
+    });
     /**
      * 라우터
      */
