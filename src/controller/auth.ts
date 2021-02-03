@@ -2,9 +2,8 @@ import { RequestHandler } from "express";
 import { getRepository } from "typeorm";
 import { User } from "../entity/User";
 import bcrypt from "bcryptjs";
-import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import "../passport";
-import passport from "passport";
 
 function generateToken(payload: any, time: string | number) {
   return jwt.sign(payload, process.env.JWT_SECRET, {
@@ -13,21 +12,29 @@ function generateToken(payload: any, time: string | number) {
 }
 
 export const logout: RequestHandler = (req, res, next) => {
-  req.logout();
-  return res.status(200).send({ message: "로그아웃 성공" });
+  return res
+    .status(200)
+    .clearCookie("refreshToken")
+    .send({ message: "로그아웃 성공" });
 };
 
-export const silentRefresh: RequestHandler = (req, res, next) => {
-  if (!req.cookies["refreshToken"]) {
-    return res.status(401).send();
-  }
-
-  const { refreshToken } = req.cookies;
+export const silentRefresh: RequestHandler = async (req, res, next) => {
   try {
-    jwt.verify(refreshToken, process.env.JWT_SECRET);
+    if (!req.cookies["refreshToken"]) {
+      throw new Error("RefreshToken not exist");
+    }
+    const { refreshToken } = req.cookies;
+    const payload = jwt.verify(refreshToken, process.env.JWT_SECRET) as {
+      id: string;
+      iat: number;
+      exp: number;
+    };
 
-    const newRefreshToken = generateToken({}, "1h");
-    const newAccessToken = generateToken({}, "5m");
+    const userRepository = getRepository(User);
+    const user = await userRepository.findOne(payload.id);
+
+    const newRefreshToken = generateToken({ id: user.id }, "1h");
+    const newAccessToken = generateToken({ id: user.id }, "5m");
     return res
       .status(200)
       .cookie("refreshToken", newRefreshToken, {
@@ -35,9 +42,13 @@ export const silentRefresh: RequestHandler = (req, res, next) => {
         // sameSite: "none",
         // secure: true,
       })
-      .send({ token: newAccessToken, user: {} });
+      .send({
+        token: newAccessToken,
+        user: { id: user.id, email: user.email, username: user.username },
+      });
   } catch (e) {
-    return res.status(401).send();
+    // 인증 실패시 refreshToken까지 초기화
+    return res.status(401).cookie("refreshToken", "").send();
   }
 };
 /**
@@ -45,7 +56,7 @@ export const silentRefresh: RequestHandler = (req, res, next) => {
  */
 export const login: RequestHandler = (req, res, next) => {
   const user = req.user as User;
-  const refreshToken = generateToken({}, "1m");
+  const refreshToken = generateToken({ id: user.id }, "1h");
   const accessToken = generateToken({ id: user.id }, "5m");
 
   return res
