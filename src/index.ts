@@ -11,8 +11,8 @@ import libraryRoutes from "./routes/library";
 import wishRoutes from "./routes/wish";
 import cors from "cors";
 import passport from "passport";
-import session from "express-session";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 createConnection()
@@ -28,26 +28,14 @@ createConnection()
         credentials: true,
       })
     );
+    app.use(cookieParser());
     app.use(express.json());
     app.use(logger("dev"));
-
-    /**
-     * 세션 설정
-     */
-    app.use(
-      session({
-        secret: "SECRET_CODE",
-        cookie: { maxAge: 60 * 60 * 60 * 1000 },
-        resave: false,
-        saveUninitialized: false,
-      })
-    );
 
     /**
      * 패스포트
      */
     app.use(passport.initialize());
-    app.use(passport.session());
 
     app.get("/", (req, res) => {
       res.json({
@@ -68,16 +56,6 @@ createConnection()
     app.use("/library", libraryRoutes);
     app.use("/naver/search/book", naverApiRoutes);
     app.use("/kakao/search/book", kakaoApiRoutes);
-
-    // 디버그용 엔드포인트
-    app.get("/debug", (req, res) => {
-      res.json({
-        "req.session": req.session, // 세션 데이터
-        "req.user": req.user, // 유저 데이터(뒷 부분에서 설명)
-        // @ts-ignore
-        "req._passport": req._passport, // 패스포트 데이터(뒷 부분에서 설명)})
-      });
-    });
 
     app.listen(8080, () => {
       console.log("Listen on port 8080");
