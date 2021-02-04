@@ -39,8 +39,8 @@ export const silentRefresh: RequestHandler = async (req, res, next) => {
       .status(200)
       .cookie("refreshToken", newRefreshToken, {
         httpOnly: true,
-        // sameSite: "none",
-        // secure: true,
+        sameSite: "none",
+        secure: true,
       })
       .send({
         token: newAccessToken,
@@ -48,7 +48,7 @@ export const silentRefresh: RequestHandler = async (req, res, next) => {
       });
   } catch (e) {
     // 인증 실패시 refreshToken까지 초기화
-    return res.status(401).cookie("refreshToken", "").send();
+    return res.status(401).clearCookie("refreshToken").send();
   }
 };
 /**
@@ -63,8 +63,8 @@ export const login: RequestHandler = (req, res, next) => {
     .status(200)
     .cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      // sameSite: "none",
-      // secure: true,
+      sameSite: "none",
+      secure: true,
     })
     .send({
       token: accessToken,
